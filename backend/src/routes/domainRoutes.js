@@ -6,6 +6,7 @@ const {
   createDomain,
   updateDomain,
   deleteDomain,
+  bulkDeleteDomains,
   assignDomains,
   getAssignedDomains,
   getMyDomains,
@@ -24,6 +25,7 @@ router.get('/user/:userId', asyncHandler(getAssignedDomains));
 
 router.get('/', requireRole('admin'), asyncHandler(listDomains));
 router.post('/', requireRole('admin'), asyncHandler(createDomain));
+router.post('/bulk-delete', requireRole('admin'), asyncHandler(bulkDeleteDomains));
 router.put('/:id', requireRole('admin'), asyncHandler(updateDomain));
 router.delete('/:id', requireRole('admin'), asyncHandler(deleteDomain));
 router.post('/assign/:userId', requireRole('admin'), asyncHandler(assignDomains));

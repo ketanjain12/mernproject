@@ -4,8 +4,14 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
+const passwordResetRoutes = require('./routes/passwordResetRoutes');
 const userRoutes = require('./routes/userRoutes');
 const domainRoutes = require('./routes/domainRoutes');
+const auditRoutes = require('./routes/auditRoutes');
+const meRoutes = require('./routes/meRoutes');
+const statsRoutes = require('./routes/statsRoutes');
+const rateLimit = require('./middleware/rateLimit');
+const { ensureDb } = require('./utils/dbInit');
 
 const app = express();
 
@@ -14,9 +20,15 @@ app.use(express.json());
 
 app.get('/health', (req, res) => res.json({ ok: true }));
 
-app.use('/api/auth', authRoutes);
+ensureDb().catch(() => {});
+
+app.use('/api/auth', rateLimit({ windowMs: 60_000, max: 30, keyPrefix: 'auth' }), authRoutes);
+app.use('/api/auth', rateLimit({ windowMs: 60_000, max: 20, keyPrefix: 'auth_reset' }), passwordResetRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/domains', domainRoutes);
+app.use('/api/audit', auditRoutes);
+app.use('/api/me', meRoutes);
+app.use('/api/stats', statsRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found' });

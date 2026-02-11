@@ -1,5 +1,5 @@
 const express = require('express');
-const { signup, login } = require('../controllers/authController');
+const { signup, login, verifyOtp, resendOtp } = require('../controllers/authController');
 
 const router = express.Router();
 
@@ -9,5 +9,7 @@ function asyncHandler(fn) {
 
 router.post('/signup', asyncHandler(signup));
 router.post('/login', asyncHandler(login));
+router.post('/verify-otp', asyncHandler(verifyOtp));
+router.post('/resend-otp', asyncHandler(resendOtp));
 
 module.exports = router;

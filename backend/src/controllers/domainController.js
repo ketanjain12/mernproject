@@ -1,4 +1,5 @@
 const pool = require('../db/pool');
+const { writeAudit } = require('../utils/audit');
 
 async function listDomains(req, res) {
   const result = await pool.query('SELECT id, domain_name, description, created_at FROM domains ORDER BY id');
@@ -10,11 +11,16 @@ async function createDomain(req, res) {
   if (!domain_name) {
     return res.status(400).json({ message: 'domain_name is required' });
   }
-
   const created = await pool.query(
     'INSERT INTO domains (domain_name, description) VALUES ($1, $2) RETURNING id, domain_name, description, created_at',
     [domain_name, description || null]
   );
+  await writeAudit(req, {
+    action: 'domain.create',
+    entityType: 'domain',
+    entityId: created.rows[0].id,
+    meta: { domain_name: created.rows[0].domain_name },
+  });
   return res.status(201).json(created.rows[0]);
 }
 
@@ -54,6 +60,13 @@ async function updateDomain(req, res) {
     values
   );
 
+  await writeAudit(req, {
+    action: 'domain.update',
+    entityType: 'domain',
+    entityId: result.rows[0].id,
+    meta: { domain_name: result.rows[0].domain_name },
+  });
+
   return res.json(result.rows[0]);
 }
 
@@ -68,7 +81,24 @@ async function deleteDomain(req, res) {
     return res.status(404).json({ message: 'Domain not found' });
   }
 
+  await writeAudit(req, { action: 'domain.delete', entityType: 'domain', entityId: domainId });
   return res.status(204).send();
+}
+
+async function bulkDeleteDomains(req, res) {
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ message: 'ids must be a non-empty array' });
+  }
+
+  const parsed = ids.map((n) => Number(n)).filter(Number.isFinite);
+  if (parsed.length === 0) {
+    return res.status(400).json({ message: 'ids must contain valid numbers' });
+  }
+
+  const result = await pool.query('DELETE FROM domains WHERE id = ANY($1::int[]) RETURNING id', [parsed]);
+  await writeAudit(req, { action: 'domain.bulk_delete', entityType: 'domain', meta: { ids: result.rows.map((r) => r.id) } });
+  return res.json({ deleted: result.rows.map((r) => r.id) });
 }
 
 async function assignDomains(req, res) {
@@ -109,6 +139,13 @@ async function assignDomains(req, res) {
       'SELECT d.id, d.domain_name, d.description, d.created_at FROM domains d JOIN user_domains ud ON ud.domain_id = d.id WHERE ud.user_id = $1 ORDER BY d.id',
       [userId]
     );
+
+    await writeAudit(req, {
+      action: 'domain.assign',
+      entityType: 'user',
+      entityId: userId,
+      meta: { domainIds: domainIds.map((x) => Number(x)).filter(Number.isFinite) },
+    });
     return res.json({ userId, domains: assigned.rows });
   } catch (err) {
     await client.query('ROLLBACK');
@@ -149,6 +186,7 @@ module.exports = {
   createDomain,
   updateDomain,
   deleteDomain,
+  bulkDeleteDomains,
   assignDomains,
   getAssignedDomains,
   getMyDomains,

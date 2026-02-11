@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import client from '../api/client';
 import { useAuth } from '../context/AuthContext';
+import toast from 'react-hot-toast';
 
 export default function SignupPage() {
   const [name, setName] = useState('');
@@ -10,23 +11,22 @@ export default function SignupPage() {
   const [role, setRole] = useState('user');
   const [adminKey, setAdminKey] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
     try {
       const payload = { name, email, password, role };
       if (role === 'admin') payload.adminKey = adminKey.trim();
       const res = await client.post('/auth/signup', payload);
       login(res.data.token, res.data.user);
+      toast.success('Account created');
       if (res.data.user.role === 'admin') navigate('/admin');
       else navigate('/user');
     } catch (err) {
-      setError(err?.response?.data?.message || 'Signup failed');
+      toast.error(err?.response?.data?.message || 'Signup failed');
     } finally {
       setLoading(false);
     }
@@ -82,8 +82,6 @@ export default function SignupPage() {
             />
           </>
         ) : null}
-
-        {error ? <div className="mb-3 text-sm text-red-600">{error}</div> : null}
 
         <button
           type="submit"
