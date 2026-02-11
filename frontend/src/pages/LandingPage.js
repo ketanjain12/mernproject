@@ -32,9 +32,9 @@ export default function LandingPage() {
         <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(to_right,rgba(255,255,255,0.08)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.08)_1px,transparent_1px)] [background-size:48px_48px]" />
         <NetworkDots className="absolute inset-0 opacity-25" />
 
-        <div className="relative mx-auto grid min-h-screen max-w-6xl place-items-center px-4 py-10">
+        <div className="relative mx-auto grid min-h-screen max-w-6xl place-items-center px-3 py-10 sm:px-4">
           <div className="w-full max-w-3xl text-center">
-            <div className="mb-6 flex flex-col items-center justify-between gap-2 text-xs text-white/70 sm:flex-row">
+            <div className="mb-6 flex flex-col items-center justify-between gap-2 text-[11px] text-white/70 sm:flex-row sm:text-xs">
               <div className="rounded-full bg-white/10 px-3 py-1 backdrop-blur">Today: {nowText.date}</div>
               <div className="rounded-full bg-white/10 px-3 py-1 font-mono backdrop-blur">Live Time: {nowText.time}</div>
             </div>
@@ -43,8 +43,8 @@ export default function LandingPage() {
               <LiveCountdown />
             </div>
 
-            <h1 className="text-3xl font-semibold tracking-tight md:text-5xl">Domain Dashboard</h1>
-            <div className="mt-3 text-sm text-slate-200/80 md:text-base">
+            <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl md:text-5xl">Domain Dashboard</h1>
+            <div className="mt-3 text-sm text-slate-200/80 sm:text-base">
               Manage users, domains, and assignments with secure OTP auth.
             </div>
 
@@ -65,7 +65,7 @@ export default function LandingPage() {
 
             <div className="mt-10 text-xs text-white/60">Keep this page open — countdown runs continuously.</div>
 
-            <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur">
+            <div className="mt-10 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur sm:mt-12 sm:p-4">
               <ChatCharacters />
             </div>
           </div>

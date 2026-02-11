@@ -9,6 +9,7 @@ import VerifyOtpPage from './pages/VerifyOtpPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import ProfilePage from './pages/ProfilePage';
+import ChatPage from './pages/ChatPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import UserDashboard from './pages/user/UserDashboard';
 
@@ -28,6 +29,15 @@ function App() {
         element={
           <ProtectedRoute roles={['user', 'admin']}>
             <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute roles={['user', 'admin']}>
+            <ChatPage />
           </ProtectedRoute>
         }
       />

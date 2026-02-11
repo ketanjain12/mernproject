@@ -5,8 +5,8 @@ function Bubble({ text, side }) {
     <div
       className={
         side === 'left'
-          ? 'max-w-[220px] rounded-2xl bg-white/10 px-4 py-2 text-xs text-white/90 backdrop-blur'
-          : 'max-w-[220px] rounded-2xl bg-white/15 px-4 py-2 text-xs text-white/90 backdrop-blur'
+          ? 'max-w-[170px] rounded-2xl bg-white/10 px-3 py-2 text-xs text-white/90 backdrop-blur sm:max-w-[220px] sm:px-4'
+          : 'max-w-[170px] rounded-2xl bg-white/15 px-3 py-2 text-xs text-white/90 backdrop-blur sm:max-w-[220px] sm:px-4'
       }
     >
       {text}
@@ -20,7 +20,7 @@ function Character({ variant }) {
   const accent = isLeft ? '#a78bfa' : '#60a5fa';
 
   return (
-    <svg width="130" height="130" viewBox="0 0 130 130" aria-hidden="true">
+    <svg className="h-24 w-24 shrink-0 sm:h-[130px] sm:w-[130px]" viewBox="0 0 130 130" aria-hidden="true">
       <defs>
         <linearGradient id={`g-${variant}`} x1="0" x2="1">
           <stop offset="0" stopColor={accent} stopOpacity="0.9" />
@@ -61,7 +61,7 @@ function Character({ variant }) {
 export default function ChatCharacters() {
   return (
     <div className="grid gap-6 md:grid-cols-2 md:items-end">
-      <div className="flex items-end gap-3">
+      <div className="flex flex-wrap items-end gap-3">
         <Character variant="left" />
         <div className="grid gap-2">
           <Bubble side="left" text="Hey! OTP aur audit logs ready." />
@@ -69,7 +69,7 @@ export default function ChatCharacters() {
         </div>
       </div>
 
-      <div className="flex items-end justify-end gap-3">
+      <div className="flex flex-wrap items-end justify-end gap-3">
         <div className="grid gap-2 text-right">
           <Bubble side="right" text="Nice! Ab live landing page bhi premium." />
           <Bubble side="right" text="Chalo dashboard pe kaam karte hain." />

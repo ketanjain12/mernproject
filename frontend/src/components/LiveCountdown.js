@@ -41,7 +41,7 @@ export default function LiveCountdown({ durationSeconds = 30 * 60 * 60 }) {
 
   return (
     <div className="relative grid place-items-center">
-      <svg width="220" height="220" viewBox="0 0 220 220" className="absolute">
+      <svg viewBox="0 0 220 220" className="absolute h-44 w-44 sm:h-56 sm:w-56">
         <circle cx="110" cy="110" r="92" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="12" />
         <circle
           cx="110"
@@ -58,13 +58,12 @@ export default function LiveCountdown({ durationSeconds = 30 * 60 * 60 }) {
       </svg>
 
       <div className="relative z-10 text-center text-white">
-        <div className="text-sm tracking-[0.3em] opacity-80">LIVE IN</div>
-        <div className="mt-2 font-mono text-4xl font-semibold">
-          {/* {pad2(parts.h)}:{pad2(parts.m)}:{pad2(parts.s)}   29:58:30 */}
-          {now.toLocaleTimeString()}
+        <div className="text-[11px] tracking-[0.3em] opacity-80 sm:text-sm">LIVE IN</div>
+        <div className="mt-2 font-mono text-3xl font-semibold sm:text-4xl">
+          {pad2(parts.h)}:{pad2(parts.m)}:{pad2(parts.s)}
         </div>
-        {/* <div className="mt-2 text-[11px] tracking-[0.25em] opacity-80">LIVE TIME: {now.toLocaleTimeString()}</div> */}
-        <div className="mt-2 text-xs tracking-[0.2em] opacity-80">LIVE STREAM START IN</div>
+        <div className="mt-2 text-[10px] tracking-[0.25em] opacity-80 sm:text-[11px]">LIVE TIME: {now.toLocaleTimeString()}</div>
+        <div className="mt-2 text-[10px] tracking-[0.2em] opacity-80 sm:text-xs">LIVE STREAM START IN</div>
       </div>
     </div>
   );
